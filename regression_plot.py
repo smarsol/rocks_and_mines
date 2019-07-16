@@ -4,6 +4,7 @@ import numpy as np
 from sklearn.linear_model import LogisticRegression, LinearRegression
 from sklearn.model_selection import train_test_split
 
+
 def confusion_matrix(predicted, real, gamma):
   test_decisions = np.where(predicted < gamma, 0, 1)  
   tp = np.logical_and(test_decisions == 1, real == 1).sum()
@@ -41,7 +42,7 @@ test_decisions = np.where(test_yhat < gamma, 0, 1)
 
 print (test_yhat)
 print (test_y)
-print(np.abs((test_yhat - test_y) ** 2))
+print (np.abs((test_yhat - test_y) ** 2))
 print (test_decisions)
 print (model.score(test_x, test_y))
 
@@ -58,7 +59,7 @@ fpr_train = []
 fpr_test = []
 tpr_test = []
 
-for gamma_test in np.arange(-5, 5, 0.1):
+for gamma_test in np.arange(0, 1, 0.01):
   tp_train, fp_train, tn_train, fn_train = confusion_matrix(train_yhat, train_y, gamma_test)
   tpr_train.append(tp_train/(tp_train + fn_train))
   fpr_train.append(fp_train/(tn_train + fp_train))
@@ -69,15 +70,13 @@ for gamma_test in np.arange(-5, 5, 0.1):
 print(tpr_test)
 print(fpr_test) 
 
-# plt.scatter(fpr_train, tpr_train, c = 'b')
-# plt.scatter(fpr_test, tpr_test, c = 'r')
-# plt.show()
+fig = plt.figure()
+plt.plot(fpr_train, tpr_train, "o--", label = 'train')
+plt.plot(fpr_test, tpr_test, "o--", label = 'test')
+plt.legend()
+plt.xlabel("FPR", fontsize = 18)
+plt.ylabel("TPR", fontsize = 18)
+fig.tight_layout()
+plt.show()
+fig.savefig("roc_test_train.png")
 
-tp, fp, tn, fn = confusion_matrix(train_yhat, train_y, gamma_test)
-
-# f_4 = data.iloc[:,10]
-# f_24 = data.iloc[:,33]
-# labels = data.iloc[:,-1]
-
-# plt.scatter(f_4, f_24, c = labels)
-# plt.show()
